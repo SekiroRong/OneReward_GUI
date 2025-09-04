@@ -2,7 +2,8 @@
 
 Official implementation of **[OneReward: Unified Mask-Guided Image Generation via Multi-Task Human Preference Learning](https://arxiv.org/abs/xxxx)**
 
-[![arXiv](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/2508.21066) [![model](https://img.shields.io/badge/🤗-Model-yellow)](https://huggingface.co/bytedance-research/OneReward) <br>
+[![arXiv](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/2508.21066) [![model](https://img.shields.io/badge/🤗-Model-yellow)](https://huggingface.co/bytedance-research/OneReward) [![GitHub Pages](https://img.shields.io/badge/GitHub-Project-blue?logo=github)](https://one-reward.github.io/)
+<br>
 
 <p align="center">
   <img src="assets/show.jpg" alt="assert" width="800">
