@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import torch
-from src.pipeline_flux_fill_with_cfg import FluxFillCFGPipeline
 from diffusers.utils import load_image
 from diffusers import FluxTransformer2DModel
+
+from ..pipeline_flux_fill_with_cfg import FluxFillCFGPipeline
 
 transformer_onereward_dynamic = FluxTransformer2DModel.from_pretrained(
     "bytedance-research/OneReward",

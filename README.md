@@ -52,13 +52,14 @@ We propose **OneReward**, a novel RLHF methodology for the visual domain by empl
 pip install -U diffusers
 ```
 
-The following contains a code snippet illustrating how to use the model to generate images based on text prompts and input mask, support inpaint(image-fill), outpaint(image-extend), eraser(object-removal). As the model is fully trained, FluxFillCFGPipeline with cfg is needed.
+The following contains a code snippet illustrating how to use the model to generate images based on text prompts and input mask, support inpaint(image-fill), outpaint(image-extend), eraser(object-removal). As the model is fully trained, FluxFillCFGPipeline with cfg is needed, you can find in [pipeline_flux_fill_with_cfg.py](src/pipeline_flux_fill_with_cfg.py).
 
 ```python
 import torch
-from src.pipeline_flux_fill_with_cfg import FluxFillCFGPipeline
 from diffusers.utils import load_image
 from diffusers import FluxTransformer2DModel
+
+from src.pipeline_flux_fill_with_cfg import FluxFillCFGPipeline
 
 transformer_onereward = FluxTransformer2DModel.from_pretrained(
     "bytedance-research/OneReward",
@@ -102,6 +103,12 @@ image.save(f"image_fill.jpg")
   </tr>
 </table>
 
+Or you can run the whole inference demo in [demo_one_reward.py](src/examples/demo_one_reward.py) and [demo_one_reward_dynamic.py](src/examples/demo_one_reward_dynamic.py)
+```python
+python3 -m src.examples.demo_one_reward
+python3 -m src.examples.demo_one_reward_dynamic
+```
+
 ## Model
 ### FLUX.1-Fill-dev[OneReward], trained with Alg.1 in paper
 ```python
@@ -132,7 +139,6 @@ pipe = FluxFillCFGPipeline.from_pretrained(
 ```
 
 ## Multi-task Usage
-inference demo can be found in [demo_one_reward.py](src/examples/demo_one_reward.py) and [demo_one_reward_dynamic.py](src/examples/demo_one_reward_dynamic.py)
 ### Object Removal
 ```python
 image = load_image('assets/image.png')
