@@ -48,7 +48,7 @@ We propose **OneReward**, a novel RLHF methodology for the visual domain by empl
 
 1. Make sure your transformers>=4.51.3 (Supporting Qwen2.5-VL)
 
-2. Install the latest version of diffusers
+2. Install the latest version of diffusers (>=0.35.0)
 ```
 pip install -U diffusers
 ```
@@ -198,7 +198,7 @@ image.save(f"object_removal.jpg")
 ```
 
 ### Object Removal with Lora
-As the base model flux fill have undergone heavy SFT for object generation, the improvement on removal is not obvious. we release a lora for object removal separately and might be helpful for you.
+As the base model flux fill have undergone heavy SFT for object generation which cause it gain only 15% usability for object removal, the improvement on removal is not obvious. we release a lora for object removal separately and might be helpful for you.
 
 ```python
 import torch
