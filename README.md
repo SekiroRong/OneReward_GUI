@@ -14,6 +14,7 @@ Official implementation of **[OneReward: Unified Mask-Guided Image Generation vi
 - [x] Release inference code.
 - [x] Release `FLUX.1-Fill-dev[OneReward]` and `FLUX.1-Fill-dev[OneRewardDynamic]` mask-guided edit checkpoints.
 - [ ] Release `FLUX.1-dev[OneReward]` text-to-image checkpoints.
+- [ ] Comfyui support.
 - [ ] Future open-source plan.
 
 ## Introduction
@@ -139,25 +140,6 @@ pipe = FluxFillCFGPipeline.from_pretrained(
 ```
 
 ## Multi-task Usage
-### Object Removal
-```python
-image = load_image('assets/image.png')
-mask = load_image('assets/mask_remove.png')
-image = pipe(
-    prompt='remove',  # using fix prompt in object removal
-    negative_prompt="nsfw",
-    image=image,
-    mask_image=mask,
-    height=image.height,
-    width=image.width,
-    guidance_scale=1.0,
-    true_cfg=4.0,
-    num_inference_steps=50,
-    generator=torch.Generator("cpu").manual_seed(0)
-).images[0]
-image.save(f"object_removal.jpg")
-```
-
 ### Image Extend with prompt
 ```python
 image = load_image('assets/image2.png')
@@ -194,6 +176,73 @@ image = pipe(
     generator=torch.Generator("cpu").manual_seed(0)
 ).images[0]
 image.save(f"image_extend_wo_prompt.jpg")
+```
+
+### Object Removal
+```python
+image = load_image('assets/image.png')
+mask = load_image('assets/mask_remove.png')
+image = pipe(
+    prompt='remove',  # using fix prompt in object removal
+    negative_prompt="nsfw",
+    image=image,
+    mask_image=mask,
+    height=image.height,
+    width=image.width,
+    guidance_scale=1.0,
+    true_cfg=4.0,
+    num_inference_steps=50,
+    generator=torch.Generator("cpu").manual_seed(0)
+).images[0]
+image.save(f"object_removal.jpg")
+```
+
+### Object Removal with Lora
+As the base model flux fill have undergone heavy SFT for object generation, the improvement on removal is not obvious. we release a lora for object removal separately and might be helpful for you.
+
+```python
+import torch
+from diffusers.utils import load_image
+from diffusers import FluxTransformer2DModel
+
+from src.pipeline_flux_fill_with_cfg import FluxFillCFGPipeline
+
+transformer_onereward = FluxTransformer2DModel.from_pretrained(
+    "bytedance-research/OneReward",
+    subfolder="flux.1-fill-dev-OneReward-transformer",
+    torch_dtype=torch.bfloat16
+)
+
+pipe = FluxFillCFGPipeline.from_pretrained(
+    "black-forest-labs/FLUX.1-Fill-dev", 
+    transformer=transformer_onereward,
+    torch_dtype=torch.bfloat16).to("cuda")
+
+pipe.load_lora_weights(
+    "bytedance-research/OneReward",
+    subfolder="flux.1-fill-dev-object-removal-lora",
+    weight_name="pytorch_lora_weights.safetensors",
+    adapter_name="object_removal_lora"
+)
+print("Loaded adapters:", pipe.get_list_adapters())  
+pipe.set_adapters(["object_removal_lora"], adapter_weights=[1.0])
+
+# Object Removal
+image = load_image('assets/image.png')
+mask = load_image('assets/mask_remove.png')
+image = pipe(
+    prompt='remove',  # using fix prompt in object removal
+    negative_prompt="nsfw",
+    image=image,
+    mask_image=mask,
+    height=image.height,
+    width=image.width,
+    guidance_scale=1.0,
+    true_cfg=4.0,
+    num_inference_steps=50,
+    generator=torch.Generator("cpu").manual_seed(0),
+).images[0]
+image.save(f"object_removal_lora.jpg")
 ```
 
 
